@@ -1,3 +1,4 @@
+use chrono::{TimeZone, Utc};
 use openssl::asn1::{Asn1Integer, Asn1Time};
 use openssl::bn::BigNum;
 use openssl::hash::MessageDigest;
@@ -10,7 +11,6 @@ use openssl::x509::{X509Name, X509};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Key {
@@ -22,6 +22,12 @@ pub struct Key {
     location: Option<String>,
     province: Option<String>,
     validity: Option<u32>,
+    #[serde(default = "default_timestamp")]
+    timestamp: String,
+}
+
+fn default_timestamp() -> String {
+    "202109241029".to_string() // TODO
 }
 
 impl Key {
@@ -33,8 +39,7 @@ impl Key {
 
         let mut builder = X509Name::builder().expect("Get X509Name builder failed");
         let tax_id = self.tax_id.replace('.', "").replace('-', "");
-        let timestamp = "202109241029"; // TODO
-        let common_name = format!("{}-{}-{}", self.company_name, timestamp, tax_id);
+        let common_name = format!("{}-{}-{}", self.company_name, self.timestamp, tax_id);
         builder
             .append_entry_by_text("CN", &common_name)
             .expect("Set X509Name `CN` failed");
@@ -68,7 +73,8 @@ impl Key {
         builder.set_subject_name(&name).expect("Set X509 subject name failed");
         builder.set_issuer_name(&name).expect("Set X509 issuer name failed");
         builder.set_pubkey(&pkey).expect("Set X509 public key failed");
-        let not_before = Asn1Time::from_str(&format!("{}Z", timestamp)).expect("Set Asn1Time before failed");
+        let timestamp = timestamp_to_unix(&self.timestamp);
+        let not_before = Asn1Time::from_unix(timestamp).expect("Set Asn1Time before failed");
         builder.set_not_before(&not_before).expect("Set X509 start time failed");
         let not_after = Asn1Time::days_from_now(365).expect("Set Asn1Time after failed");
         builder.set_not_after(&not_after).expect("Set X509 validity failed");
@@ -91,5 +97,18 @@ impl Key {
             .build(&self.password, &tax_id, &pkey, &certificate)
             .expect("Generate Pkcs12 failed");
         pkcs12.to_der().expect("Serialize Pkcs12 to DER failed")
+    }
+}
+
+fn timestamp_to_unix(timestamp: &str) -> i64 {
+    let current_time = Utc::now();
+    let timestamp = match Utc.datetime_from_str(timestamp, "%Y%m%d%H%M") {
+        Ok(time) => time,
+        _ => return current_time.timestamp(),
+    };
+    if timestamp > current_time {
+        current_time.timestamp()
+    } else {
+        timestamp.timestamp()
     }
 }

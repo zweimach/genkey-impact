@@ -153,10 +153,14 @@ submitForm model =
                     Ok body
     in
     ( changeStatus Loading model
-    , Http.post
-        { url = model.apiUrl ++ "/pkcs12"
+    , Http.riskyRequest
+        { method = "POST"
+        , headers = []
+        , url = model.apiUrl ++ "/pkcs12"
         , body = Http.jsonBody <| Key.encode model.form
         , expect = Http.expectBytesResponse toMsg toResult
+        , timeout = Just 30000
+        , tracker = Nothing
         }
     )
 

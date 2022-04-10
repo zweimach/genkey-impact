@@ -9,6 +9,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Key exposing (Key)
+import VitePluginHelper as V
 
 
 main : Program Flags Model Msg
@@ -217,16 +218,16 @@ viewMessage status =
         ( icon, primary, secondary ) =
             case status of
                 Failure _ ->
-                    ( "/assets/error.svg", "border-red-500 bg-rose-50", "text-red-800" )
+                    ( V.asset "/assets/error.svg", "border-red-500 bg-rose-50", "text-red-800" )
 
                 Success ->
-                    ( "/assets/success.svg", "border-emerald-600 bg-emerald-50", "text-green-800" )
+                    ( V.asset "/assets/success.svg", "border-emerald-600 bg-emerald-50", "text-green-800" )
 
                 Ready ->
-                    ( "/assets/info.svg", "border-blue-400 bg-sky-50", "text-blue-800" )
+                    ( V.asset "/assets/info.svg", "border-blue-400 bg-sky-50", "text-blue-800" )
 
                 Loading ->
-                    ( "/assets/loading.svg", "border-cyan-300 bg-cyan-50", "text-cyan-700" )
+                    ( V.asset "/assets/loading.svg", "border-cyan-300 bg-cyan-50", "text-cyan-700" )
 
         message =
             case status of

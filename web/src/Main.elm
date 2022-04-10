@@ -2,7 +2,6 @@ module Main exposing (main)
 
 import Browser exposing (Document)
 import Bytes exposing (Bytes)
-import Cert exposing (Cert)
 import File.Download as DL
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -29,7 +28,6 @@ type alias Flags =
 
 type alias Model =
     { form : Key
-    , file : Maybe Cert
     , status : Status
     , apiUrl : String
     }
@@ -73,7 +71,6 @@ init flags =
                     ( s, Ready )
     in
     ( { form = Key.empty
-      , file = Nothing
       , status = status
       , apiUrl = apiUrl
       }
@@ -178,7 +175,7 @@ subscriptions _ =
 view : Model -> Document Msg
 view model =
     Document "Genkey Impact"
-        [ div [ class "h-full flex flex-col justify-start items-center p-4 text-lg" ]
+        [ div [ class "h-full flex flex-col justify-start items-center gap-4 p-4 text-sm md:text-lg" ]
             [ h1 [ class "my-4 font-serif text-3xl font-bold text-sky-700" ] [ text "Genkey Impact" ]
             , Html.form [ novalidate True, onSubmit SubmitForm, class "w-full sm:max-w-screen-sm flex flex-col justify-start items-stretch gap-4 p-2 md:p-8" ]
                 [ viewInput "text" "Company Name" model.form.companyName InputCompanyName

@@ -31,6 +31,7 @@ type alias Model =
     { form : Key
     , status : Status
     , apiUrl : String
+    , showPassword : Bool
     }
 
 
@@ -55,6 +56,7 @@ type Msg
     | ClearForm
     | GotBytes Bytes
     | ChangeStatus Status
+    | TogglePassword
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -74,6 +76,7 @@ init flags =
     ( { form = Key.empty
       , status = status
       , apiUrl = apiUrl
+      , showPassword = False
       }
     , Cmd.none
     )
@@ -106,10 +109,18 @@ update msg model =
         ChangeStatus status ->
             ( changeStatus status model, Cmd.none )
 
+        TogglePassword ->
+            ( togglePassword model, Cmd.none )
+
 
 changeStatus : Status -> Model -> Model
 changeStatus status model =
     { model | status = status }
+
+
+togglePassword : Model -> Model
+togglePassword model =
+    { model | showPassword = not model.showPassword }
 
 
 downloadFile : Bytes -> Model -> ( Model, Cmd msg )
@@ -170,6 +181,14 @@ subscriptions _ =
 
 view : Model -> Document Msg
 view model =
+    let
+        ( inputType, inputText, inputClass ) =
+            if model.showPassword then
+                ( "text", "Hide Password", class "border-emerald-600 bg-emerald-50 hover:bg-emerald-200 focus:bg-emerald-200 text-green-800" )
+
+            else
+                ( "password", "Show Password", class "border-red-500 bg-rose-50 hover:bg-rose-200 focus:bg-rose-200 text-red-800" )
+    in
     Document "Genkey Impact"
         [ div [ class "h-full flex flex-col justify-start items-center gap-4 p-4 text-sm md:text-lg" ]
             [ h1 [ class "my-4 font-serif text-3xl font-bold text-sky-700" ] [ text "Genkey Impact" ]
@@ -177,7 +196,14 @@ view model =
                 [ viewInput "text" "Company Name" model.form.companyName InputCompanyName
                 , viewInput "text" "NPWP" model.form.taxId InputTaxId
                 , viewInput "email" "Email" model.form.email InputEmail
-                , viewInput "password" "Password" model.form.password InputPassword
+                , viewInput inputType "Password" model.form.password InputPassword
+                , button
+                    [ type_ "button"
+                    , onClick TogglePassword
+                    , class "px-4 py-2 rounded border-2 focus:outline-none font-semibold"
+                    , inputClass
+                    ]
+                    [ text inputText ]
                 , button
                     [ type_ "submit"
                     , class "px-4 py-2 rounded border-2 border-sky-400 bg-sky-300 focus:outline-none hover:bg-sky-500 active:border-indigo-600 focus:bg-sky-500 font-semibold text-blue-800 disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-700"

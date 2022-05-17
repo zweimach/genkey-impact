@@ -1,5 +1,6 @@
 module Main exposing (main)
 
+import Api
 import Browser exposing (Document)
 import Bytes exposing (Bytes)
 import File.Download as DL
@@ -82,22 +83,22 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         InputCompanyName companyName ->
-            updateForm (\form -> { form | companyName = companyName }) model
+            ( updateForm (\form -> { form | companyName = companyName }) model, Cmd.none )
 
         InputTaxId taxId ->
-            updateForm (\form -> { form | taxId = taxId |> String.replace "." "" |> String.replace "-" "" }) model
+            ( updateForm (\form -> { form | taxId = taxId |> String.replace "." "" |> String.replace "-" "" }) model, Cmd.none )
 
         InputEmail email ->
-            updateForm (\form -> { form | email = email }) model
+            ( updateForm (\form -> { form | email = email }) model, Cmd.none )
 
         InputPassword password ->
-            updateForm (\form -> { form | password = password }) model
+            ( updateForm (\form -> { form | password = password }) model, Cmd.none )
 
         SubmitForm ->
             submitForm model
 
         ClearForm ->
-            clearForm model
+            ( { model | form = Key.empty }, Cmd.none )
 
         GotBytes bytes ->
             downloadFile bytes model
@@ -116,9 +117,9 @@ downloadFile bytes model =
     ( changeStatus Success model, DL.bytes (model.form.taxId ++ ".p12") "application/x-pkcs12" bytes )
 
 
-updateForm : (Key -> Key) -> Model -> ( Model, Cmd msg )
+updateForm : (Key -> Key) -> Model -> Model
 updateForm transform model =
-    ( { model | form = transform model.form }, Cmd.none )
+    { model | form = transform model.form }
 
 
 submitForm : Model -> ( Model, Cmd Msg )
@@ -150,21 +151,16 @@ submitForm model =
                     Ok body
     in
     ( changeStatus Loading model
-    , Http.riskyRequest
-        { method = "POST"
-        , headers = []
+    , Api.post
+        { headers = []
         , url = model.apiUrl ++ "/pkcs12"
         , body = Http.jsonBody <| Key.encode model.form
         , expect = Http.expectBytesResponse toMsg toResult
         , timeout = Just 30000
         , tracker = Nothing
+        , withCredentials = True
         }
     )
-
-
-clearForm : Model -> ( Model, Cmd msg )
-clearForm model =
-    ( { model | form = Key.empty }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

@@ -1,6 +1,7 @@
 module Key exposing (Key, decoder, empty, encode)
 
 import Json.Decode as D
+import Json.Decode.Extra as D
 import Json.Encode as E
 
 
@@ -33,8 +34,8 @@ encode k =
 
 decoder : D.Decoder Key
 decoder =
-    D.map4 Key
-        (D.field "companyName" D.string)
-        (D.field "npwp" D.string)
-        (D.field "email" D.string)
-        (D.field "password" D.string)
+    D.succeed Key
+        |> D.andMap (D.field "companyName" D.string)
+        |> D.andMap (D.field "npwp" D.string)
+        |> D.andMap (D.field "email" D.string)
+        |> D.andMap (D.field "password" D.string)

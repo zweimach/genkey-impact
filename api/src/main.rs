@@ -9,7 +9,7 @@ async fn main() -> std::io::Result<()> {
         .unwrap_or_else(|_| "8080".to_string())
         .parse::<u16>()
         .expect("Failed to parse `GENKEY_PORT`");
-    let host = "0.0.0.0";
+    let host = env::var("GENKEY_HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
     println!("Listening at {}:{}", host, port);
     HttpServer::new(|| App::new().service(status).service(generate_key))
         .bind((host, port))?

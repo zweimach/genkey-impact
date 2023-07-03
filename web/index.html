@@ -5,32 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Genkey Impact</title>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap");
-      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
-
-      @tailwind base;
-      @tailwind components;
-      @tailwind utilities;
-
-      html,
-      body {
-        @apply h-full;
-      }
-
-      body {
-        @apply antialiased;
-      }
-    </style>
-    <script type="module">
-      import { Elm } from "./src/Main.elm";
-
-      Elm.Main.init({
-        flags: {
-          apiUrl: import.meta.env["VITE_API_URL"] || null,
-        },
-      });
-    </script>
   </head>
   <body></body>
+  <script type="module" src="./src/main.js"></script>
 </html>

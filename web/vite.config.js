@@ -1,10 +1,6 @@
 import { defineConfig } from "vite";
-import elmPlugin from "vite-plugin-elm";
+import Elm from "vite-plugin-elm";
 
 export default defineConfig({
-  plugins: [elmPlugin()],
-  build: {
-    outDir: "dist",
-    target: "es2020",
-  },
+  plugins: [Elm()],
 });

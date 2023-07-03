@@ -1,4 +1,5 @@
-use chrono::{TimeZone, Utc};
+use chrono::serde::ts_milliseconds;
+use chrono::{DateTime, Duration, Utc};
 use openssl::asn1::{Asn1Integer, Asn1Time};
 use openssl::bn::BigNum;
 use openssl::hash::MessageDigest;
@@ -21,13 +22,18 @@ pub struct Key {
     password: String,
     location: Option<String>,
     province: Option<String>,
-    validity: Option<u32>,
-    #[serde(default = "default_timestamp")]
-    timestamp: String,
+    #[serde(with = "ts_milliseconds", default = "default_creation_date")]
+    creation_date: DateTime<Utc>,
+    #[serde(with = "ts_milliseconds", default = "default_expiration_date")]
+    expiration_date: DateTime<Utc>,
 }
 
-fn default_timestamp() -> String {
-    "202109241029".to_string() // TODO
+fn default_creation_date() -> DateTime<Utc> {
+    Utc::now()
+}
+
+fn default_expiration_date() -> DateTime<Utc> {
+    Utc::now() + Duration::days(365)
 }
 
 impl Key {
@@ -36,10 +42,11 @@ impl Key {
 
         let rsa = Rsa::generate(2048).expect("Generate RSA key failed");
         let pkey = PKey::from_rsa(rsa).expect("Generate key pair failed");
+        let timestamp = format!("{}", self.creation_date.format("%Y%m%d%H%M"));
 
         let mut builder = X509Name::builder().expect("Get X509Name builder failed");
         let tax_id = self.tax_id.replace('.', "").replace('-', "");
-        let common_name = format!("{}-{}-{}", self.company_name, self.timestamp, tax_id);
+        let common_name = format!("{}-{}-{}", self.company_name, timestamp, tax_id);
         builder
             .append_entry_by_text("CN", &common_name)
             .expect("Set X509Name `CN` failed");
@@ -47,7 +54,7 @@ impl Key {
         builder
             .append_entry_by_text("OU", organizational_unit)
             .expect("Set X509Name `OU` failed");
-        let organization = "OP"; // TODO
+        let organization = &self.company_name;
         builder
             .append_entry_by_text("O", organization)
             .expect("Set X509Name `O` failed");
@@ -73,10 +80,9 @@ impl Key {
         builder.set_subject_name(&name).expect("Set X509 subject name failed");
         builder.set_issuer_name(&name).expect("Set X509 issuer name failed");
         builder.set_pubkey(&pkey).expect("Set X509 public key failed");
-        let timestamp = timestamp_to_unix(&self.timestamp);
-        let not_before = Asn1Time::from_unix(timestamp).expect("Set Asn1Time before failed");
+        let not_before = Asn1Time::from_unix(self.creation_date.timestamp()).expect("Set Asn1Time before failed");
         builder.set_not_before(&not_before).expect("Set X509 start time failed");
-        let not_after = Asn1Time::days_from_now(365).expect("Set Asn1Time after failed");
+        let not_after = Asn1Time::from_unix(self.expiration_date.timestamp()).expect("Set Asn1Time after failed");
         builder.set_not_after(&not_after).expect("Set X509 validity failed");
         builder.sign(&pkey, MessageDigest::sha256()).expect("Sign X509 failed");
         let subject_key_id = SubjectKeyIdentifier::new()
@@ -97,18 +103,5 @@ impl Key {
             .build(&self.password, &tax_id, &pkey, &certificate)
             .expect("Generate Pkcs12 failed");
         pkcs12.to_der().expect("Serialize Pkcs12 to DER failed")
-    }
-}
-
-fn timestamp_to_unix(timestamp: &str) -> i64 {
-    let current_time = Utc::now();
-    let timestamp = match Utc.datetime_from_str(timestamp, "%Y%m%d%H%M") {
-        Ok(time) => time,
-        _ => return current_time.timestamp(),
-    };
-    if timestamp > current_time {
-        current_time.timestamp()
-    } else {
-        timestamp.timestamp()
     }
 }

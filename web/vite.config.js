@@ -1,6 +1,7 @@
+import React from "@vitejs/plugin-react";
+import ReScript from "@jihchi/vite-plugin-rescript";
 import { defineConfig } from "vite";
-import Elm from "vite-plugin-elm";
 
 export default defineConfig({
-  plugins: [Elm()],
+  plugins: [ReScript(), React()],
 });

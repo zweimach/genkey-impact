@@ -1,0 +1,24 @@
+{
+  "name": "genkey-impact-web",
+  "namespace": false,
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "package-specs": {
+    "module": "es6",
+    "in-source": true,
+    "suffix": ".bs.js"
+  },
+  "jsx": {
+    "version": 4,
+    "mode": "automatic"
+  },
+  "reanalyze": {
+    "analysis": ["dce", "exception", "termination"]
+  },
+  "bsc-flags": ["-open RescriptCore"],
+  "bs-dependencies": ["@rescript/core", "@rescript/react", "rescript-json", "rescript-webapi"]
+}

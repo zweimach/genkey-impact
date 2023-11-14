@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Key {
+pub struct Certificate {
     #[serde(rename = "npwp")]
     tax_id: String,
     company_name: String,
@@ -36,7 +36,7 @@ fn default_expiration_date() -> DateTime<Utc> {
     Utc::now() + Duration::days(365)
 }
 
-impl Key {
+impl Certificate {
     pub fn to_pkcs12(&self) -> Vec<u8> {
         let mut rng = rand::thread_rng();
 
@@ -45,7 +45,7 @@ impl Key {
         let timestamp = format!("{}", self.creation_date.format("%Y%m%d%H%M"));
 
         let mut builder = X509Name::builder().expect("Get X509Name builder failed");
-        let tax_id = self.tax_id.replace('.', "").replace('-', "");
+        let tax_id = self.tax_id.replace(['.', '-'], "");
         let common_name = format!("{}-{}-{}", self.company_name, timestamp, tax_id);
         builder
             .append_entry_by_text("CN", &common_name)
@@ -96,11 +96,14 @@ impl Key {
         builder
             .set_serial_number(&serial_number)
             .expect("Set X509 serial number failed");
-        let certificate: X509 = builder.build();
+        let cert: X509 = builder.build();
 
-        let builder = Pkcs12::builder();
+        let mut builder = Pkcs12::builder();
         let pkcs12 = builder
-            .build(&self.password, &tax_id, &pkey, &certificate)
+            .name(&tax_id)
+            .pkey(&pkey)
+            .cert(&cert)
+            .build2(&self.password)
             .expect("Generate Pkcs12 failed");
         pkcs12.to_der().expect("Serialize Pkcs12 to DER failed")
     }

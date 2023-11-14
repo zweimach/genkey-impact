@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "^4.0"
-chrono = { version = "^0.4", features = ["serde"] }
-openssl = { version = "^0.10", features = ["vendored"] }
-rand = "^0.8"
-serde = { version = "^1.0", features = ["derive"] }
-tokio = { version = "^1.0", features = ["full"] }
+axum = "0.6.20"
+chrono = { version = "0.4.31", features = ["serde"] }
+openssl = { version = "0.10.59", features = ["vendored"] }
+rand = "0.8.5"
+serde = { version = "1.0.192", features = ["derive"] }
+tokio = { version = "1.34.0", features = ["full"] }
+tower-http = { version = "0.4.4", features = ["cors"] }

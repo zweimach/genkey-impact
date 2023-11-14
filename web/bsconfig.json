@@ -20,5 +20,5 @@
     "analysis": ["dce", "exception", "termination"]
   },
   "bsc-flags": ["-open RescriptCore"],
-  "bs-dependencies": ["@rescript/core", "@rescript/react", "rescript-json", "rescript-webapi"]
+  "bs-dependencies": ["@rescript/core", "@rescript/react", "rescript-struct", "rescript-webapi"]
 }

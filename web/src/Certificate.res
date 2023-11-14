@@ -27,35 +27,23 @@ let empty = make(
   ~expirationDate=None,
 )
 
+open RescriptStruct
+
+let struct = S.object(o => {
+  companyName: o->S.field("companyName", S.string()),
+  taxId: o->S.field("npwp", S.string()),
+  email: o->S.field("email", S.string()),
+  password: o->S.field("password", S.string()),
+  creationDate: o->S.field("creationDate", S.option(S.float())),
+  expirationDate: o->S.field("expirationDate", S.option(S.float())),
+})
+
 let encode = (data): JSON.t => {
-  open! Json.Encode
-  let fields = [
-    ("companyName", string(data.companyName)),
-    ("npwp", string(data.taxId)),
-    ("email", string(data.email)),
-    ("password", string(data.password)),
-  ]
-  data.creationDate->Option.forEach(v => Array.push(fields, ("creationDate", float(v))))
-  data.expirationDate->Option.forEach(v => Array.push(fields, ("expirationDate", float(v))))
-  object(fields)
+  data->S.serializeOrRaiseWith(struct)
 }
 
-let decoder: Json.Decode.t<t> = {
-  open! Json.Decode
-  succeed((companyName, taxId, email, password, creationDate, expirationDate) => {
-    companyName,
-    taxId,
-    email,
-    password,
-    creationDate,
-    expirationDate,
-  })
-  ->andMap(field("companyName", string))
-  ->andMap(field("npwp", string))
-  ->andMap(field("email", string))
-  ->andMap(field("password", string))
-  ->andMap(field("creationDate", nullable(float)))
-  ->andMap(field("expirationDate", nullable(float)))
+let decode = data => {
+  data->S.parseOrRaiseWith(struct)
 }
 
 let submit = async (apiUrl: string, data: t): result<unit, string> => {

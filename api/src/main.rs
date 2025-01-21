@@ -8,6 +8,7 @@ use axum::{
 };
 use certificate::Certificate;
 use std::env;
+use tokio::net::TcpListener;
 use tower_http::cors::CorsLayer;
 
 #[tokio::main]
@@ -24,8 +25,9 @@ async fn main() {
 
     println!("Listening on {}:{}", host, port);
 
-    let addr = format!("{host}:{port}").parse().unwrap();
-    axum::Server::bind(&addr).serve(app.into_make_service()).await.unwrap();
+    let addr = format!("{host}:{port}");
+    let listener = TcpListener::bind(&addr).await.unwrap();
+    axum::serve(listener, app.into_make_service()).await.unwrap();
 }
 
 async fn status() -> &'static str {

@@ -10,7 +10,7 @@ let make = (
   <input
     className={String.concatMany(
       "px-4 py-2 rounded bg-white border-2 border-sky-400 hover:border-indigo-500 focus:outline-none focus:border-blue-500 placeholder:text-sky-300",
-      [" ", className->Option.getWithDefault("")],
+      [" ", className->Option.getOr("")],
     )->String.trim}
     onInput={e => onInput(ReactEvent.Form.target(e)["value"])}
     type_

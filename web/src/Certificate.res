@@ -27,23 +27,23 @@ let empty = make(
   ~expirationDate=None,
 )
 
-open RescriptStruct
+open RescriptSchema
 
 let struct = S.object(o => {
-  companyName: o->S.field("companyName", S.string()),
-  taxId: o->S.field("npwp", S.string()),
-  email: o->S.field("email", S.string()),
-  password: o->S.field("password", S.string()),
-  creationDate: o->S.field("creationDate", S.option(S.float())),
-  expirationDate: o->S.field("expirationDate", S.option(S.float())),
+  companyName: o.field("companyName", S.string),
+  taxId: o.field("npwp", S.string),
+  email: o.field("email", S.string),
+  password: o.field("password", S.string),
+  creationDate: o.field("creationDate", S.option(S.float)),
+  expirationDate: o.field("expirationDate", S.option(S.float)),
 })
 
 let encode = (data): JSON.t => {
-  data->S.serializeOrRaiseWith(struct)
+  data->S.reverseConvertToJsonOrThrow(struct)
 }
 
 let decode = data => {
-  data->S.parseOrRaiseWith(struct)
+  data->S.parseJsonOrThrow(struct)
 }
 
 let submit = async (apiUrl: string, data: t): result<unit, string> => {
@@ -68,6 +68,6 @@ let submit = async (apiUrl: string, data: t): result<unit, string> => {
       Ok()
     }
   } catch {
-  | Exn.Error(exn) => exn->Exn.message->Option.getWithDefault("Failed to make request.")->Error
+  | Exn.Error(exn) => exn->Exn.message->Option.getOr("Failed to make request.")->Error
   }
 }

@@ -5,5 +5,5 @@ dist/
 dist-ssr/
 elm-stuff/
 *.local
-*.bs.js
+*.res.js
 web/lib

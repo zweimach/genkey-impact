@@ -73,7 +73,7 @@ let make = () => {
   let (expirationDate, setExpirationDate) = React.useState(() => None)
   let (creationDate, setCreationDate) = React.useState(() => None)
 
-  React.useEffect0(() => {
+  React.useEffect(() => {
     switch apiUrl {
     | None
     | Some("") =>
@@ -81,9 +81,9 @@ let make = () => {
     | Some(v) => send(SetApiUrl(v))
     }
     None
-  })
+  }, [])
 
-  React.useEffect1(() => {
+  React.useEffect(() => {
     expirationDate
     ->Option.map(c => c->ThisDate.toDate)
     ->Option.map(c => c->Date.getTime)
@@ -92,7 +92,7 @@ let make = () => {
     None
   }, [expirationDate])
 
-  React.useEffect1(() => {
+  React.useEffect(() => {
     creationDate
     ->Option.map(c => c->ThisDate.toDate)
     ->Option.map(c => c->Date.getTime)
@@ -101,7 +101,7 @@ let make = () => {
     None
   }, [creationDate])
 
-  let submit = React.useCallback2(() => {
+  let submit = React.useCallback(() => {
     send(ChangeStatus(Loading))
     Certificate.submit(state.apiUrl, state.form)
     ->Promise.thenResolve(result => {
@@ -113,16 +113,16 @@ let make = () => {
     ->Promise.done
   }, (state.form, state.apiUrl))
 
-  let reset = React.useCallback0(_ => {
+  let reset = React.useCallback(_ => {
     send(ClearForm)
     setExpirationDate(_ => None)
     setCreationDate(_ => None)
-  })
+  }, [])
 
-  let initExpirationDate = React.useCallback0(_ => {
+  let initExpirationDate = React.useCallback(_ => {
     let now = ThisDate.empty()
     setExpirationDate(_ => Some({...now, year: now.year + 1}))
-  })
+  }, [])
 
   let (inputType, inputText, inputClass) = if state.showPassword {
     (
@@ -191,7 +191,7 @@ let make = () => {
               className="w-1/3"
               placeholder="Day"
               onInput={v => {
-                let day = v->Int.fromString->Option.getWithDefault(date.day)
+                let day = v->Int.fromString->Option.getOr(date.day)
                 setExpirationDate(_ => Some({...date, day}))
               }}
             />
@@ -199,7 +199,7 @@ let make = () => {
               className="w-1/3"
               placeholder="Month"
               onInput={v => {
-                let month = v->Int.fromString->Option.getWithDefault(date.month)
+                let month = v->Int.fromString->Option.getOr(date.month)
                 setExpirationDate(_ => Some({...date, month}))
               }}
             />
@@ -207,7 +207,7 @@ let make = () => {
               className="w-1/3"
               placeholder="Year"
               onInput={v => {
-                let year = v->Int.fromString->Option.getWithDefault(date.year)
+                let year = v->Int.fromString->Option.getOr(date.year)
                 setExpirationDate(_ => Some({...date, year}))
               }}
             />
@@ -236,7 +236,7 @@ let make = () => {
               placeholder="Day"
               defaultValue={date.day->Int.toString}
               onInput={v => {
-                let day = v->Int.fromString->Option.getWithDefault(date.day)
+                let day = v->Int.fromString->Option.getOr(date.day)
                 setCreationDate(_ => Some({...date, day}))
               }}
             />
@@ -245,7 +245,7 @@ let make = () => {
               placeholder="Month"
               defaultValue={date.month->Int.toString}
               onInput={v => {
-                let month = v->Int.fromString->Option.getWithDefault(date.month)
+                let month = v->Int.fromString->Option.getOr(date.month)
                 setCreationDate(_ => Some({...date, month}))
               }}
             />
@@ -254,7 +254,7 @@ let make = () => {
               placeholder="Year"
               defaultValue={date.year->Int.toString}
               onInput={v => {
-                let year = v->Int.fromString->Option.getWithDefault(date.year)
+                let year = v->Int.fromString->Option.getOr(date.year)
                 setCreationDate(_ => Some({...date, year}))
               }}
             />

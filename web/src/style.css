@@ -1,14 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap") layer(base);
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap") layer(base);
-
 @import "tailwindcss";
 
-@source './**/*.js';
-
 @theme {
-  --font-sans: Poppins, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
-  --font-serif: Merriweather, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, Adwaita Sans,
+    Cantarell, Ubuntu, roboto, noto, helvetica, arial, sans-serif;
+  --font-serif: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro,
+    serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --font-mono: Menlo, Consolas, Monaco, Adwaita Mono, Liberation Mono, Lucida Console, monospace;
 }
 
 /*

@@ -17,9 +17,5 @@
     "version": 4,
     "mode": "automatic"
   },
-  "reanalyze": {
-    "analysis": ["dce", "exception", "termination"]
-  },
-  "bsc-flags": ["-open RescriptCore"],
-  "bs-dependencies": ["@rescript/core", "@rescript/react", "rescript-schema", "rescript-webapi"]
+  "dependencies": ["@rescript/react", "rescript-webapi", "sury"]
 }

@@ -27,8 +27,6 @@ let empty = make(
   ~expirationDate=None,
 )
 
-open RescriptSchema
-
 let struct = S.object(o => {
   companyName: o.field("companyName", S.string),
   taxId: o.field("npwp", S.string),
@@ -68,6 +66,6 @@ let submit = async (apiUrl: string, data: t): result<unit, string> => {
       Ok()
     }
   } catch {
-  | Exn.Error(exn) => exn->Exn.message->Option.getOr("Failed to make request.")->Error
+  | JsExn(exn) => exn->JsExn.message->Option.getOr("Failed to make request.")->Error
   }
 }

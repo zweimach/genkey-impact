@@ -9,22 +9,20 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@jihchi/vite-plugin-rescript": "^6.0.0",
-    "@rescript/core": "^1.6.1",
-    "@rescript/react": "^0.13.0",
+    "@jihchi/vite-plugin-rescript": "^8.0.0-beta.2",
+    "@rescript/react": "^0.14.0",
     "@tailwindcss/vite": "^4.1.18",
-    "@vitejs/plugin-react": "^4.3.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "rescript": "^11.1.4",
-    "rescript-schema": "^9.1.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "rescript": "^12.1.0",
     "rescript-webapi": "^0.10.0",
+    "sury": ">=11.0.0-alpha.4",
     "tailwindcss": "^4.1.18",
-    "vite": "^6.0.11"
+    "vite": "^7.3.1"
   },
   "devDependencies": {
-    "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "reanalyze": "^2.23.0"
+    "prettier": "^3.8.0",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }

@@ -20,7 +20,8 @@ let make = (~status: AppStatus.t) => {
   }
   <div
     className={"max-w-xl flex justify-center items-center gap-4 p-4 rounded-lg border-4 " ++
-    primary}>
+    primary}
+  >
     <img src width="48" height="48" alt="status icon" />
     <p className={"text-ellipsis overflow-hidden " ++ secondary}> {message->React.string} </p>
   </div>

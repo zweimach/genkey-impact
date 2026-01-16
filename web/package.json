@@ -12,20 +12,19 @@
     "@jihchi/vite-plugin-rescript": "^6.0.0",
     "@rescript/core": "^1.6.1",
     "@rescript/react": "^0.13.0",
+    "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rescript": "^11.1.4",
     "rescript-schema": "^9.1.0",
     "rescript-webapi": "^0.10.0",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.1.18",
     "vite": "^6.0.11"
   },
   "devDependencies": {
     "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.6.10",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "reanalyze": "^2.23.0"
   }
 }

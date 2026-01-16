@@ -146,7 +146,7 @@ let make = () => {
       {"Genkey Impact"->React.string}
     </h1>
     <form
-      className="w-full sm:max-w-screen-sm flex flex-col justify-start items-stretch gap-4 p-2 md:p-8"
+      className="w-full sm:max-w-(--breakpoint-sm) flex flex-col justify-start items-stretch gap-4 p-2 md:p-8"
       noValidate=true
       onSubmit={e => e->ReactEvent.Form.preventDefault->submit}>
       <TextInput
@@ -165,7 +165,7 @@ let make = () => {
         type_=inputType
       />
       <button
-        className={"px-4 py-2 rounded border-2 focus:outline-none font-semibold " ++ inputClass}
+        className={"px-4 py-2 rounded-sm border-2 focus:outline-hidden font-semibold " ++ inputClass}
         type_="button"
         onClick={_ => send(TogglePassword)}>
         {inputText->React.string}
@@ -173,7 +173,7 @@ let make = () => {
       {switch expirationDate {
       | None =>
         <button
-          className="px-4 py-2 rounded border-2 border-sky-400 bg-sky-100 focus:outline-none hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
+          className="px-4 py-2 rounded-sm border-2 border-sky-400 bg-sky-100 focus:outline-hidden hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
           type_="button"
           onClick={initExpirationDate}>
           {"Add Expiration Date"->React.string}
@@ -181,7 +181,7 @@ let make = () => {
       | Some(date) =>
         <>
           <button
-            className="px-4 py-2 rounded border-2 border-sky-400 bg-sky-100 focus:outline-none hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
+            className="px-4 py-2 rounded-sm border-2 border-sky-400 bg-sky-100 focus:outline-hidden hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
             type_="button"
             onClick={_ => setExpirationDate(_ => None)}>
             {"Remove Expiration Date"->React.string}
@@ -217,7 +217,7 @@ let make = () => {
       {switch creationDate {
       | None =>
         <button
-          className="px-4 py-2 rounded border-2 border-sky-400 bg-sky-100 focus:outline-none hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
+          className="px-4 py-2 rounded-sm border-2 border-sky-400 bg-sky-100 focus:outline-hidden hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
           type_="button"
           onClick={_ => setCreationDate(_ => ThisDate.empty()->Some)}>
           {"Add Creation Date"->React.string}
@@ -225,7 +225,7 @@ let make = () => {
       | Some(date) =>
         <>
           <button
-            className="px-4 py-2 rounded border-2 border-sky-400 bg-sky-100 focus:outline-none hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
+            className="px-4 py-2 rounded-sm border-2 border-sky-400 bg-sky-100 focus:outline-hidden hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
             type_="button"
             onClick={_ => setCreationDate(_ => None)}>
             {"Remove Creation Date"->React.string}
@@ -263,14 +263,14 @@ let make = () => {
       }}
       <button
         type_="submit"
-        className="px-4 py-2 rounded border-2 border-sky-400 bg-sky-300 focus:outline-none hover:bg-sky-500 active:border-indigo-600 focus:bg-sky-500 font-semibold text-blue-800 disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-700"
+        className="px-4 py-2 rounded-sm border-2 border-sky-400 bg-sky-300 focus:outline-hidden hover:bg-sky-500 active:border-indigo-600 focus:bg-sky-500 font-semibold text-blue-800 disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-700"
         disabled={isLoading || isEnvError}>
         {"Submit"->React.string}
       </button>
       <button
         type_="reset"
         onClick={reset}
-        className="px-4 py-2 rounded border-2 border-sky-400 bg-sky-100 focus:outline-none hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
+        className="px-4 py-2 rounded-sm border-2 border-sky-400 bg-sky-100 focus:outline-hidden hover:bg-sky-200 active:border-indigo-600 focus:bg-sky-200 font-semibold text-blue-800"
         disabled={isLoading}>
         {"Clear"->React.string}
       </button>

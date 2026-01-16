@@ -38,7 +38,7 @@ fn default_expiration_date() -> DateTime<Utc> {
 
 impl Certificate {
     pub fn to_pkcs12(&self) -> Vec<u8> {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         let rsa = Rsa::generate(2048).expect("Generate RSA key failed");
         let pkey = PKey::from_rsa(rsa).expect("Generate key pair failed");
@@ -91,7 +91,7 @@ impl Certificate {
         builder
             .append_extension(subject_key_id)
             .expect("Set X509 extension failed");
-        let random_serial = &BigNum::from_u32(rng.gen()).expect("Generate BigNum failed");
+        let random_serial = &BigNum::from_u32(rng.random()).expect("Generate BigNum failed");
         let serial_number = Asn1Integer::from_bn(random_serial).expect("Generate Asn1Integer failed");
         builder
             .set_serial_number(&serial_number)
